@@ -72,7 +72,7 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Nav Links */}
-                <div className="hidden md:flex items-center gap-4">
+                <div className="desktop-only" style={{ alignItems: 'center', gap: '16px' }}>
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
@@ -103,31 +103,32 @@ export default function Navbar() {
                 {/* Right side */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {isConnected && (
-                        <Link
-                            href="/dashboard"
-                            className="hidden md:inline-flex"
-                            style={{
-                                padding: '8px 18px',
-                                borderRadius: '10px',
-                                background: 'rgba(16, 185, 129, 0.1)',
-                                border: '1px solid rgba(16, 185, 129, 0.25)',
-                                color: '#10b981',
-                                textDecoration: 'none',
-                                fontSize: '14px',
-                                fontWeight: 600,
-                                transition: 'all 0.2s',
-                            }}
-                        >
-                            My Dashboard
-                        </Link>
+                        <div className="desktop-only">
+                            <Link
+                                href="/dashboard"
+                                style={{
+                                    padding: '8px 18px',
+                                    borderRadius: '10px',
+                                    background: 'rgba(16, 185, 129, 0.1)',
+                                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                                    color: '#10b981',
+                                    textDecoration: 'none',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    transition: 'all 0.2s',
+                                }}
+                            >
+                                My Dashboard
+                            </Link>
+                        </div>
                     )}
-                    <div className="hidden md:inline-flex">
+                    <div className="desktop-only">
                         <ConnectKitButton />
                     </div>
 
                     {/* Mobile menu toggle */}
                     <button
-                        className="inline-flex md:hidden"
+                        className="mobile-only"
                         onClick={() => setMenuOpen(!menuOpen)}
                         style={{
                             background: 'transparent',
@@ -171,6 +172,9 @@ export default function Navbar() {
                             {link.label}
                         </Link>
                     ))}
+                    <div style={{ marginTop: '12px', padding: '0 16px' }}>
+                        <ConnectKitButton />
+                    </div>
                 </div>
             )}
         </nav>

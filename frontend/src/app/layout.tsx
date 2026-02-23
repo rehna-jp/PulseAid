@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Web3Provider } from '@/providers/Web3Provider';
 import Footer from '@/components/Footer';
+import RoleSelectionModal from '@/components/RoleSelectionModal';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' });
@@ -30,6 +31,7 @@ export default function RootLayout({
         <Web3Provider>
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             {children}
+            <RoleSelectionModal />
             <Footer />
           </div>
         </Web3Provider>

@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import { usePlatformStats } from '@/hooks/useContracts';
+import { formatEther } from 'viem';
 import {
   Activity,
   Shield,
@@ -13,13 +15,14 @@ import {
   Users,
   DollarSign,
   Heart,
+  Loader2,
 } from 'lucide-react';
 
 const stats = [
-  { label: 'Total Donated', value: '$2.4M+', icon: DollarSign, color: '#10b981' },
-  { label: 'Verified Institutions', value: '187', icon: Shield, color: '#3b82f6' },
-  { label: 'Active Campaigns', value: '94', icon: Activity, color: '#8b5cf6' },
-  { label: 'Donors Worldwide', value: '12,400+', icon: Users, color: '#f59e0b' },
+  { label: 'Total Donated', value: '0 ETH', icon: DollarSign, color: '#10b981' },
+  { label: 'Verified Institutions', value: '0', icon: Shield, color: '#3b82f6' },
+  { label: 'Active Campaigns', value: '0', icon: Activity, color: '#8b5cf6' },
+  { label: 'Donors Worldwide', value: '0', icon: Users, color: '#f59e0b' },
 ];
 
 const features = [
@@ -210,45 +213,7 @@ export default function HomePage() {
       {/* Stats Section */}
       <section style={{ padding: '80px 24px', borderTop: '1px solid var(--border)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '20px',
-            }}
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="stat-card" style={{ textAlign: 'center' }}>
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '12px',
-                    background: `${stat.color}18`,
-                    border: `1px solid ${stat.color}30`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 16px',
-                  }}
-                >
-                  <stat.icon size={22} color={stat.color} />
-                </div>
-                <div
-                  style={{
-                    fontSize: '32px',
-                    fontWeight: 800,
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    color: stat.color,
-                    marginBottom: '4px',
-                  }}
-                >
-                  {stat.value}
-                </div>
-                <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{stat.label}</div>
-              </div>
-            ))}
-          </div>
+          <StatsSection />
         </div>
       </section>
 
@@ -448,7 +413,90 @@ export default function HomePage() {
         </div>
       </section>
 
-      
+
+    </div>
+  );
+}
+function StatsSection() {
+  const { data, isLoading } = usePlatformStats();
+
+  let liveStats = stats;
+
+  if (data && !isLoading) {
+    const statsData = data as [bigint, bigint, bigint, bigint];
+    liveStats = [
+      {
+        label: 'Total Donated',
+        value: `${parseFloat(formatEther(statsData[0])).toFixed(2)} ETH`,
+        icon: DollarSign,
+        color: '#10b981',
+      },
+      {
+        label: 'Verified Institutions',
+        value: String(statsData[1]),
+        icon: Shield,
+        color: '#3b82f6',
+      },
+      {
+        label: 'Active Campaigns',
+        value: String(statsData[2]),
+        icon: Activity,
+        color: '#8b5cf6',
+      },
+      {
+        label: 'Donors Worldwide',
+        value: String(statsData[3]),
+        icon: Users,
+        color: '#f59e0b',
+      },
+    ];
+  }
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '20px',
+      }}
+    >
+      {liveStats.map((stat) => (
+        <div key={stat.label} className="stat-card" style={{ textAlign: 'center', position: 'relative' }}>
+          {isLoading && !data && (
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Loader2 size={20} className="animate-spin" style={{ color: stat.color, opacity: 0.5 }} />
+            </div>
+          )}
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: '12px',
+              background: `${stat.color}18`,
+              border: `1px solid ${stat.color}30`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}
+          >
+            <stat.icon size={22} color={stat.color} />
+          </div>
+          <div
+            style={{
+              fontSize: '32px',
+              fontWeight: 800,
+              fontFamily: "'Space Grotesk', sans-serif",
+              color: stat.color,
+              marginBottom: '4px',
+              opacity: isLoading && !data ? 0.3 : 1,
+            }}
+          >
+            {stat.value}
+          </div>
+          <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{stat.label}</div>
+        </div>
+      ))}
     </div>
   );
 }
