@@ -110,6 +110,7 @@ contract DeployPulseAid is Script {
             address(campaignFactory),
             address(institutionRegistry),
             address(patToken),
+            address(donationNFT),
             address(treasury),
             deployer
         );
@@ -197,6 +198,17 @@ contract DeployPulseAid is Script {
         // Grant Treasury roles
         treasury.grantRole(treasury.GOVERNANCE_ROLE(), address(governanceDAO));
         treasury.grantRole(treasury.WITHDRAWER_ROLE(), address(governanceDAO));
+
+        // Grant GovernanceDAO the GOVERNANCE_ROLE on CampaignFactory and InstitutionRegistry
+        // so governance proposals can call completeCampaign, updateReputation, banInstitution, etc.
+        campaignFactory.grantRole(
+            campaignFactory.GOVERNANCE_ROLE(),
+            address(governanceDAO)
+        );
+        institutionRegistry.grantRole(
+            institutionRegistry.GOVERNANCE_ROLE(),
+            address(governanceDAO)
+        );
 
         // v5.0: Wire UserRegistry to CampaignFactory and InstitutionRegistry
         userRegistry.setContractAddresses(

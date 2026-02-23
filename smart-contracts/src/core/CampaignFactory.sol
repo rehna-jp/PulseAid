@@ -66,6 +66,8 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
     uint256[] public activeCampaignIds;
     mapping(uint256 => uint256) public campaignActiveIndex; // campaignId => index in activeCampaignIds
     mapping(address => uint256[]) public institutionCampaigns;
+    
+    uint256 public totalPlatformRaised;
 
     // === Constructor ===
     constructor(
@@ -139,7 +141,6 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
         campaign.stakeAmount = msg.value;
         campaign.status = CampaignStatus.Active;
         campaign.createdAt = block.timestamp;
-        campaign.status = CampaignStatus.Active;
         
         activeCampaignIds.push(campaignId);
         campaignActiveIndex[campaignId] = activeCampaignIds.length - 1;
@@ -193,6 +194,8 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
         
         emit Events.DonationReceived(campaignId, msg.sender, msg.value, block.timestamp);
         
+        totalPlatformRaised += msg.value;
+        
         // Check if goal reached
         if (campaign.raised >= campaign.goal && 
             campaign.status == CampaignStatus.Active) {
@@ -200,9 +203,14 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
             emit Events.CampaignGoalReached(campaignId, campaign.raised, block.timestamp);
         }
         
-        // Mint PAT tokens for donor (1 PAT per $1, assuming 1 ETH = $3000)
-        // Note: In production, use oracle for accurate USD conversion
-        uint256 dollarAmount = msg.value * 3000;
+        // Mint PAT tokens for donor (1 PAT per $1, assuming 1 ETH = $3000).
+        // dollarAmount must be expressed in 10^18 units (i.e. $1 = 1e18).
+        // msg.value is in wei (1 ETH = 1e18 wei), so:
+        //   dollarAmount = (msg.value * 3000 * 1e18) / 1e18 = msg.value * 3000
+        // But mintForDonation divides by 1e18, so we must keep the full 1e18 scale:
+        //   dollarAmount = msg.value * 3000  (already in the 1e18-scaled dollar unit)
+        // Note: In production, replace 3000 with a Chainlink oracle price feed.
+        uint256 dollarAmount = (msg.value * 3000); // scaled: 1 ETH => 3000 * 1e18 "dollar units"
         try patToken.mintForDonation(msg.sender, dollarAmount) {} catch {}
 
         // v5.0: Update UserRegistry for smart role detection
@@ -302,6 +310,12 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
             50,
             "Campaign Completed Successfully"
         );
+
+        // Update institution's campaign statistics in InstitutionRegistry
+        try institutionRegistry.recordCampaignSuccess(
+            campaign.institution,
+            campaign.raised
+        ) {} catch {}
         
         // Mint completion reward
         patToken.mintForCampaignCompletion(campaign.institution);
@@ -443,4 +457,20 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
 
     // === Receive ETH ===
     receive() external payable {}
+    /**
+     * @notice Get global platform statistics
+     */
+    function getPlatformStats() external view returns (
+        uint256 totalRaised,
+        uint256 totalInstitutions,
+        uint256 activeCampaignsCount,
+        uint256 totalDonors
+    ) {
+        return (
+            totalPlatformRaised,
+            institutionRegistry.getTotalInstitutions(),
+            activeCampaignIds.length,
+            userRegistry.totalDonorUsers()
+        );
+    }
 }

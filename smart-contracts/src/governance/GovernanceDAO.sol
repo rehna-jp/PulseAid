@@ -159,7 +159,7 @@ contract GovernanceDAO is AccessControl, ReentrancyGuard, Pausable {
         }
         if (proposal.hasVoted[msg.sender]) revert Errors.AlreadyVoted();
         if (block.timestamp > proposal.endTime) {
-            revert Errors.VotingPeriodNotEnded();
+            revert Errors.VotingPeriodEnded();
         }
         
         // v5.0: Reputation-weighted voting power

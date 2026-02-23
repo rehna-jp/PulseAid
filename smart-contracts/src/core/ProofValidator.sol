@@ -10,6 +10,7 @@ import "./EscrowManager.sol";
 import "./CampaignFactory.sol";
 import "./InstitutionRegistry.sol";
 import "../tokens/PATToken.sol";
+import "../tokens/DonationNFT.sol";
 
 /**
  * @title ProofValidator
@@ -60,11 +61,14 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
     CampaignFactory     public campaignFactory;
     InstitutionRegistry public institutionRegistry;
     PATToken            public patToken;
+    DonationNFT         public donationNFT;
     address             public treasury;
 
     mapping(uint256 => Proof)   public proofs;
     mapping(uint256 => Dispute) public disputes;
     uint256 public disputeCounter;
+    // Sentinel: track whether proof dispute was internally created to avoid ID-0 slot collision
+    mapping(uint256 => bool) public internalDisputeCreated;
 
     event VoterRewardAvailable(uint256 indexed disputeId, bool winningVote, uint256 timestamp);
     event VoterRewardClaimed(uint256 indexed disputeId, address indexed voter, uint256 amount, uint256 timestamp);
@@ -74,17 +78,20 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
         address _campaignFactory,
         address _institutionRegistry,
         address _patToken,
+        address _donationNFT,
         address _treasury,
         address admin
     ) {
         if (_escrowManager == address(0) || _campaignFactory == address(0) ||
             _institutionRegistry == address(0) || _patToken == address(0) ||
-            _treasury == address(0) || admin == address(0)) revert Errors.ZeroAddress();
+            _donationNFT == address(0) || _treasury == address(0) || admin == address(0))
+            revert Errors.ZeroAddress();
 
         escrowManager       = EscrowManager(payable(_escrowManager));
         campaignFactory     = CampaignFactory(payable(_campaignFactory));
         institutionRegistry = InstitutionRegistry(payable(_institutionRegistry));
         patToken            = PATToken(_patToken);
+        donationNFT         = DonationNFT(_donationNFT);
         treasury            = _treasury;
 
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
@@ -160,7 +167,9 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
             // but for now, we mark as Challenged to force a vote or governance action
             proof.status = ProofStatus.Challenged;
             // Create a default "Auto-validation failed" dispute if none exists
-            if (proof.disputeId == 0 && disputes[0].challenger == address(0)) {
+        // Create internal dispute only once per proof (guard using campaign-scoped flag)
+            if (!internalDisputeCreated[campaignId]) {
+                internalDisputeCreated[campaignId] = true;
                  _createInternalDispute(campaignId, "Auto-validation failed: Missing components");
             }
         }
@@ -285,8 +294,21 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
         // 1. Release funds in EscrowManager
         escrowManager.releaseFunds(campaignId, proof.institution);
         
-        // 2. Mark campaign as completed in Factory (this updates reputation)
+        // 2. Mark campaign as completed in Factory (updates reputation + institution stats)
         campaignFactory.completeCampaign(campaignId);
+
+        // 3. Mint DonationNFT receipts for all campaign donors
+        //    Fetching the donor list from CampaignFactory then batch-minting.
+        //    Wrapped in try/catch so an NFT failure never blocks fund release.
+        try campaignFactory.getCampaignDonors(campaignId) returns (address[] memory donors) {
+            if (donors.length > 0) {
+                try donationNFT.batchMintReceipts(
+                    campaignId,
+                    donors,
+                    proof.ipfsHash
+                ) {} catch {}
+            }
+        } catch {}
 
         emit Events.ProofFinalized(campaignId, true, block.timestamp);
     }

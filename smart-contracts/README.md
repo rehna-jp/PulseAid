@@ -1,66 +1,33 @@
-## Foundry
+# PulseAid Smart Contracts ⛓️
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+The core logic of the PulseAid platform, built with **Foundry**. These contracts handle everything from institution registration to fund escrow and ZK-proof validation.
 
-Foundry consists of:
+## 🧱 Core Contracts
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+-   **`CampaignFactory.sol`**: Creates and manages fundraising campaigns. Tracks total platform stats.
+-   **`EscrowManager.sol`**: Securely holds funds and handles releases/refunds.
+-   **`InstitutionRegistry.sol`**: Manages verified institutions and their on-chain reputation.
+-   **`ProofValidator.sol`**: Validates impact proofs and handles dispute resolution.
+-   **`UserRegistry.sol`**: Stores user role preferences and global user counts.
+-   **`PATToken.sol`**: The governance token of the ecosystem.
+-   **`DonationNFT.sol`**: On-chain receipts for donors.
 
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
+## 🛠 Usage
 
 ### Build
-
 ```shell
-$ forge build
+forge build
 ```
 
 ### Test
-
 ```shell
-$ forge test
+forge test
 ```
 
-### Format
-
+### Deploy (Arbitrum Sepolia)
 ```shell
-$ forge fmt
+forge script script/Deploy.s.sol --rpc-url <rpc_url> --private-key <pk> --broadcast
 ```
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+## 🔒 Security
+The system uses **OpenZeppelin** implementation for AccessControl, Pausable, and token standards. It is designed to be non-custodial and trustless via cryptographic verification.

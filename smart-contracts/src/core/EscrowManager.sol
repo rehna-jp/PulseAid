@@ -39,9 +39,6 @@ contract EscrowManager is AccessControl, ReentrancyGuard, Pausable {
     address public treasury;
     uint256 public totalFeesCollected;
 
-    event FundsDeposited(uint256 indexed campaignId, address indexed donor,    uint256 amount);
-    event FundsWithdrawn(uint256 indexed campaignId, address indexed recipient, uint256 amount);
-    event RefundIssued  (uint256 indexed campaignId, address indexed donor,     uint256 amount);
     event RefundsEnabled(uint256 indexed campaignId);
     event FeeCollected  (uint256 indexed campaignId, uint256 amount);
 
@@ -82,7 +79,6 @@ contract EscrowManager is AccessControl, ReentrancyGuard, Pausable {
         totalLockedFunds += msg.value; // ← global tracker updated
 
         emit Events.FundsLocked(campaignId, msg.value, block.timestamp);
-        emit FundsDeposited(campaignId, donor, msg.value);
     }
 
     // ── Release ───────────────────────────────────────────────────────────────
@@ -160,7 +156,6 @@ contract EscrowManager is AccessControl, ReentrancyGuard, Pausable {
         if (!ok) revert Errors.TransferFailed();
 
         emit Events.FundsRefunded(campaignId, msg.sender, amount, block.timestamp);
-        emit RefundIssued(campaignId, msg.sender, amount);
     }
 
     /**
@@ -188,7 +183,6 @@ contract EscrowManager is AccessControl, ReentrancyGuard, Pausable {
             (bool ok,) = payable(donor).call{value: amount}("");
             if (!ok) revert Errors.TransferFailed();
             emit Events.FundsRefunded(campaignId, donor, amount, block.timestamp);
-            emit RefundIssued(campaignId, donor, amount);
         }
     }
 

@@ -19,7 +19,7 @@ contract InstitutionRegistry is AccessControl, ReentrancyGuard, Pausable {
     // === Constants ===
     bytes32 public constant GOVERNANCE_ROLE = keccak256("GOVERNANCE_ROLE");
     
-    uint256 public constant VERIFICATION_STAKE = 0.000001 ether; // ~$150-200
+    uint256 public constant VERIFICATION_STAKE = 0.05 ether; // ~$150 at $3000/ETH (update with oracle in production)
     uint256 public constant CHALLENGE_WINDOW = 7 days;
     uint256 public constant VOTING_PERIOD = 5 days;
     uint256 public constant INITIAL_REPUTATION = 1000;
@@ -335,6 +335,32 @@ contract InstitutionRegistry is AccessControl, ReentrancyGuard, Pausable {
         }
         
         emit Events.ReputationUpdated(institution, change, inst.reputation, reason);
+    }
+
+    /**
+     * @notice Record a successful campaign for an institution (called by CampaignFactory on completion)
+     * @param institution Address of the institution
+     * @param amountRaised Total ETH raised by the campaign (in wei)
+     */
+    function recordCampaignSuccess(
+        address institution,
+        uint256 amountRaised
+    ) external onlyRole(GOVERNANCE_ROLE) {
+        Institution storage inst = institutions[institution];
+        if (!isInstitution[institution]) revert Errors.InstitutionNotFound();
+        inst.totalCampaigns += 1;
+        inst.successfulCampaigns += 1;
+        inst.totalRaised += amountRaised;
+    }
+
+    /**
+     * @notice Record a failed/cancelled campaign for an institution (does not count as successful)
+     * @param institution Address of the institution
+     */
+    function recordCampaignFailure(address institution) external onlyRole(GOVERNANCE_ROLE) {
+        Institution storage inst = institutions[institution];
+        if (!isInstitution[institution]) revert Errors.InstitutionNotFound();
+        inst.totalCampaigns += 1;
     }
 
     /**
