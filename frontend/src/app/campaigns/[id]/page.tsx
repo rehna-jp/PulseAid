@@ -52,8 +52,8 @@ export default function CampaignDetailPage() {
     const { data: donationRaw } = useDonationAmount(id, address);
 
     // ── Mutations ──
-    const { claimRefund, isPending: refundPending, isConfirming: refundConfirming, isSuccess: refundSuccess, error: refundError, hash: refundHash } = useClaimRefund(id);
-    const { finalizeProof, isPending: finalizePending, isConfirming: finalizeConfirming, isSuccess: finalizeSuccess, error: finalizeError, hash: finalizeHash } = useFinalizeProof(id);
+    const { claimRefund, isPending: refundPending, isConfirming: refundConfirming, isSuccess: refundSuccess, error: refundError, hash: refundHash } = useClaimRefund();
+    const { finalizeProof, isPending: finalizePending, isConfirming: finalizeConfirming, isSuccess: finalizeSuccess, error: finalizeError, hash: finalizeHash } = useFinalizeProof();
 
     if (loadingCampaign) {
         return (
@@ -162,7 +162,7 @@ export default function CampaignDetailPage() {
                                     </div>
                                 ) || canFinalize && (
                                     <div style={{ marginTop: '16px' }}>
-                                        <button className="btn-primary" style={{ width: '100%' }} onClick={() => finalizeProof()}>Finalize Proof & Release Funds</button>
+                                        <button className="btn-primary" style={{ width: '100%' }} onClick={() => finalizeProof(id)}>Finalize Proof & Release Funds</button>
                                         <TxStatus isPending={finalizePending} isConfirming={finalizeConfirming} isSuccess={finalizeSuccess} error={finalizeError} hash={finalizeHash} />
                                     </div>
                                 )}
@@ -213,7 +213,7 @@ export default function CampaignDetailPage() {
                                     <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', textAlign: 'center' }}>
                                         Campaign cancelled. Your balance: <strong>{userDonation} ETH</strong>
                                     </div>
-                                    <button className="btn-primary" style={{ width: '100%', background: '#ef4444', borderColor: '#ef4444' }} onClick={() => claimRefund()}>
+                                    <button className="btn-primary" style={{ width: '100%', background: '#ef4444', borderColor: '#ef4444' }} onClick={() => claimRefund(id)}>
                                         Claim Refund
                                     </button>
                                     <TxStatus isPending={refundPending} isConfirming={refundConfirming} isSuccess={refundSuccess} error={refundError} hash={refundHash} />

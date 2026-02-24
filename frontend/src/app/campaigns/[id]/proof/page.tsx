@@ -32,8 +32,9 @@ export default function ProofSubmissionPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const hex = proofHex.startsWith('0x') ? proofHex : (`0x${proofHex}` as `0x${string}`);
-        submit(campaignId, hex as `0x${string}`, proofData || reclaimUrl);
+        // Passing 5 arguments as expected by useSubmitProof: 
+        // campaignId, ipfs(report), receipts, photos, metrics
+        submit(campaignId, reclaimUrl || proofHex, proofData || '0x', '0x', '0x');
     };
 
     return (
