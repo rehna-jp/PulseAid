@@ -19,7 +19,7 @@ contract InstitutionRegistry is AccessControl, ReentrancyGuard, Pausable {
     // === Constants ===
     bytes32 public constant GOVERNANCE_ROLE = keccak256("GOVERNANCE_ROLE");
     
-    uint256 public constant VERIFICATION_STAKE = 0.05 ether; // ~$150 at $3000/ETH (update with oracle in production)
+    uint256 public constant VERIFICATION_STAKE = 0.00005 ether; // ~$150 at $3000/ETH (update with oracle in production)
     uint256 public constant CHALLENGE_WINDOW = 7 days;
     uint256 public constant VOTING_PERIOD = 5 days;
     uint256 public constant INITIAL_REPUTATION = 1000;

@@ -121,7 +121,7 @@ export function useRegisterInstitution() {
         country: string,
         website: string,
         zkProof: unknown, // IReclaim.SignedClaim struct — populate via Reclaim Protocol SDK
-        stakeAmount: string = '0.05'
+        stakeAmount: string = '0.00005'
     ) => {
         writeContract({
             address: CONTRACT_ADDRESSES.InstitutionRegistry,
@@ -248,7 +248,7 @@ export function useCreateCampaign() {
             abi: ABIS.CampaignFactory as unknown[],
             functionName: 'createCampaign',
             args: [title, description, category, ipfsMetadata, parseEther(goalEth), BigInt(durationSeconds)],
-            value: parseEther('0.025'), // CAMPAIGN_STAKE
+            value: parseEther('0.000025'), // CAMPAIGN_STAKE
             chainId: arbitrumSepolia.id,
         });
     };
@@ -477,7 +477,7 @@ export function useSubmitProof() {
             abi: ABIS.ProofValidator as unknown[],
             functionName: 'submitProof',
             args: [campaignId, ipfsHash, receiptsHash, photosHash, metricsHash],
-            value: parseEther('0.01'), // STORAGE_FEE
+            value: parseEther('0.00001'), // STORAGE_FEE
             chainId: arbitrumSepolia.id,
         });
     };

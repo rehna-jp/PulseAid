@@ -118,7 +118,7 @@ contract FullIntegrationTest is Test {
         
         // 3. Create campaign
         vm.prank(institution);
-        uint256 campaignId = campaignFactory.createCampaign{value: 0.025 ether}(
+        uint256 campaignId = campaignFactory.createCampaign{value: 0.000025 ether}(
             "Emergency Relief", "Help us", "Emergency", "ipfs://meta", goal, duration
         );
         assertEq(campaignId, 0);
@@ -136,7 +136,7 @@ contract FullIntegrationTest is Test {
         
         // 6. Submit proof
         vm.prank(institution);
-        proofValidator.submitProof{value: 0.01 ether}(campaignId, "ipfs://proof", "ipfs://receipts", "ipfs://photos", "ipfs://metrics");
+        proofValidator.submitProof{value: 0.00001 ether}(campaignId, "ipfs://proof", "ipfs://receipts", "ipfs://photos", "ipfs://metrics");
         
         // 7. Verify automated approval after challenge period (e.g. 48h)
         vm.warp(block.timestamp + 49 hours);
@@ -144,7 +144,7 @@ contract FullIntegrationTest is Test {
         
         // 8. Check funds released to institution (minus fee, proof stake, but includes campaign stake refund)
         uint256 expected = 5 ether - (5 ether * 10 / 10000);
-        assertEq(institution.balance, 10 ether - institutionRegistry.VERIFICATION_STAKE() - 0.01 ether + expected);
+        assertEq(institution.balance, 10 ether - institutionRegistry.VERIFICATION_STAKE() - 0.00001 ether + expected);
         
         // 9. Check reputation increase
         (,,,,,,uint256 reputation,,,,,,,) = institutionRegistry.institutions(institution);
@@ -170,7 +170,7 @@ contract FullIntegrationTest is Test {
         
         // 3. Create campaign
         vm.prank(institution);
-        uint256 campaignId = campaignFactory.createCampaign{value: 0.025 ether}(
+        uint256 campaignId = campaignFactory.createCampaign{value: 0.000025 ether}(
             "Emergency Relief", "Help us", "Emergency", "ipfs://meta", goal, duration
         );
         
@@ -184,7 +184,7 @@ contract FullIntegrationTest is Test {
         
         // 6. Submit proof
         vm.prank(institution);
-        proofValidator.submitProof{value: 0.01 ether}(campaignId, "ipfs://bad", "ipfs://bad", "ipfs://bad", "ipfs://bad");
+        proofValidator.submitProof{value: 0.00001 ether}(campaignId, "ipfs://bad", "ipfs://bad", "ipfs://bad", "ipfs://bad");
         
         // Start a challenge/dispute
         // Mint some tokens to donor1 so they can challenge
@@ -235,7 +235,7 @@ contract FullIntegrationTest is Test {
         
         // 4. Create campaign and donate
         vm.prank(institution);
-        uint256 campaignId = campaignFactory.createCampaign{value: 0.025 ether}(
+        uint256 campaignId = campaignFactory.createCampaign{value: 0.000025 ether}(
             "Title", "Desc", "Cat", "ipfs", goal, duration
         );
         
@@ -248,7 +248,7 @@ contract FullIntegrationTest is Test {
         
         // 6. Submit and challenge proof
         vm.prank(institution);
-        proofValidator.submitProof{value: 0.01 ether}(campaignId, "H", "H", "H", "H");
+        proofValidator.submitProof{value: 0.00001 ether}(campaignId, "H", "H", "H", "H");
         
         vm.startPrank(admin);
         patToken.mintCustomReward(donor1, 1000 * 10**18, "Seed");

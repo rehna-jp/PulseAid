@@ -27,7 +27,7 @@ export default function RegisterInstitutionPage() {
         category: 'Non-Profit',
         country: 'Nigeria',
         website: '',
-        stake: '0.05',
+        stake: '0.00005',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -82,7 +82,7 @@ export default function RegisterInstitutionPage() {
                 >
                     <Info size={18} color="#3b82f6" style={{ flexShrink: 0, marginTop: '1px' }} />
                     <div style={{ fontSize: '13px', color: '#93c5fd', lineHeight: 1.6 }}>
-                        <strong>Stake Requirement:</strong> A minimum of 0.01 ETH stake is required for registration.
+                        <strong>Stake Requirement:</strong> A minimum of 0.00005 ETH stake is required for registration.
                         This stake is held on-chain and returned upon successful de-registration or slashed for misconduct.
                     </div>
                 </div>
@@ -245,7 +245,7 @@ export default function RegisterInstitutionPage() {
                                     Stake Amount (ETH) *
                                 </label>
                                 <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-                                    {['0.01', '0.05', '0.1'].map((s) => (
+                                    {['0.00005', '0.0001', '0.0005'].map((s) => (
                                         <button
                                             key={s}
                                             type="button"
@@ -270,8 +270,8 @@ export default function RegisterInstitutionPage() {
                                     className="input-field"
                                     required
                                     type="number"
-                                    min="0.05"
-                                    step="0.001"
+                                    min="0.00005"
+                                    step="0.00001"
                                     value={form.stake}
                                     onChange={update('stake')}
                                 />

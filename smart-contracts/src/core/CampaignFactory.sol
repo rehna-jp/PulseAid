@@ -19,10 +19,10 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
     // === Constants ===
     bytes32 public constant GOVERNANCE_ROLE = keccak256("GOVERNANCE_ROLE");
     
-    uint256 public constant CAMPAIGN_STAKE = 0.025 ether; // ~$75-100
+    uint256 public constant CAMPAIGN_STAKE = 0.000025 ether; // ~$75-100
     uint256 public constant MIN_CAMPAIGN_DURATION = 7 days;
     uint256 public constant MAX_CAMPAIGN_DURATION = 180 days;
-    uint256 public constant MIN_GOAL = 0.01 ether; // ~$30
+    uint256 public constant MIN_GOAL = 0.00001 ether; // ~$30
     uint256 public constant MAX_GOAL = 100 ether; // ~$300,000
 
     // === Enums ===

@@ -180,7 +180,7 @@ export default function CreateCampaignPage() {
                             </Field>
 
                             <Field icon={Target} label="Fundraising Goal (ETH) *">
-                                <input className="input-field" required type="number" min="0.001" step="0.001" value={form.goal} onChange={update('goal')} placeholder="e.g. 50" />
+                                <input className="input-field" required type="number" min="0.00001" step="0.00001" value={form.goal} onChange={update('goal')} placeholder="e.g. 50" />
                             </Field>
 
                             <Field icon={Calendar} label="Campaign Duration *">

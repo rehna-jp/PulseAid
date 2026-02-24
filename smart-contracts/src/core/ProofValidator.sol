@@ -24,7 +24,7 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
 
     uint256 public constant CHALLENGE_PERIOD      = 48 hours;
     uint256 public constant DISPUTE_VOTING_PERIOD = 5 days;
-    uint256 public constant STORAGE_FEE           = 0.01 ether;
+    uint256 public constant STORAGE_FEE           = 0.00001 ether;
     uint256 public constant MIN_CHALLENGE_STAKE   = 1_000 * 10**18;
 
     enum ProofStatus { NotSubmitted, Submitted, AutoValidated, Challenged, Approved, Rejected }

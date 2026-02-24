@@ -254,7 +254,7 @@ contract DeployPulseAid is Script {
         console.log("--------------");
         console.log("Reclaim Protocol:", reclaimProtocol);
         console.log("Verification Stake:", vm.toString(institutionRegistry.VERIFICATION_STAKE()), "wei");
-        console.log("Campaign Stake: 0.025 ETH");
+        console.log("Campaign Stake: 0.000025 ETH");
         console.log("Platform Fee: 0.1%");
         console.log("=====================================\n");
     }
