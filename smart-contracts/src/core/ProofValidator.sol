@@ -298,13 +298,26 @@ contract ProofValidator is AccessControl, ReentrancyGuard, Pausable {
         campaignFactory.completeCampaign(campaignId);
 
         // 3. Mint DonationNFT receipts for all campaign donors
-        //    Fetching the donor list from CampaignFactory then batch-minting.
+        //    Fetching the donor list + amounts from CampaignFactory then batch-minting.
         //    Wrapped in try/catch so an NFT failure never blocks fund release.
-        try campaignFactory.getCampaignDonors(campaignId) returns (address[] memory donors) {
+        try campaignFactory.getCampaignDonationData(campaignId) returns (
+            address[] memory donors,
+            uint256[] memory amounts,
+            string memory title
+        ) {
             if (donors.length > 0) {
+                // Prepare dummy timestamps (since CampaignFactory doesn't store them per-donor yet)
+                uint256[] memory timestamps = new uint256[](donors.length);
+                for (uint256 i = 0; i < donors.length; i++) {
+                    timestamps[i] = proof.submittedAt;
+                }
+                
                 try donationNFT.batchMintReceipts(
                     campaignId,
                     donors,
+                    amounts,
+                    timestamps,
+                    title,
                     proof.ipfsHash
                 ) {} catch {}
             }

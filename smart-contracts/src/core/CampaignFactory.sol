@@ -363,6 +363,29 @@ contract CampaignFactory is AccessControl, ReentrancyGuard, Pausable {
     {
         return campaignDonors[campaignId];
     }
+    
+    /**
+     * @notice Get all donation data for a campaign (used for NFT minting)
+     * @return donors List of donors
+     * @return amounts List of total donation amounts per donor
+     * @return title Campaign title for the NFT label
+     */
+    function getCampaignDonationData(uint256 campaignId)
+        external
+        view
+        returns (
+            address[] memory donors,
+            uint256[] memory amounts,
+            string memory title
+        )
+    {
+        donors = campaignDonors[campaignId];
+        title = campaigns[campaignId].title;
+        amounts = new uint256[](donors.length);
+        for (uint256 i = 0; i < donors.length; i++) {
+            amounts[i] = donations[campaignId][donors[i]];
+        }
+    }
 
     /**
      * @notice Get donation amount for a specific donor

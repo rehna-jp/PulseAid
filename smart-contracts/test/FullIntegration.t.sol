@@ -68,6 +68,7 @@ contract FullIntegrationTest is Test {
             address(campaignFactory),
             address(institutionRegistry),
             address(patToken),
+            address(donationNFT),
             address(treasury),
             admin
         );
