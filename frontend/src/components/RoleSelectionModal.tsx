@@ -9,7 +9,7 @@ import { Shield, Heart, Users, ArrowRight, Loader2 } from 'lucide-react';
 export default function RoleSelectionModal() {
     const { isConnected, address } = useAccount();
     const { data: profileRaw, isLoading: loadingProfile } = useUserProfile(address);
-    const { selectRole, isPending, isConfirming, isSuccess, error, hash } = useSelectRole();
+    const { select, isPending, isConfirming, isSuccess, error, hash } = useSelectRole();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export default function RoleSelectionModal() {
     if (!isOpen || isSuccess) return null;
 
     const handleSelect = (role: number) => {
-        selectRole(role);
+        select(role as 1 | 2);
     };
 
     return (
