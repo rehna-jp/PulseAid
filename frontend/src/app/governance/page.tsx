@@ -93,7 +93,7 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
     const handleVote = (support: boolean) => {
         if (!isConnected) return;
         setVoted(support ? 'for' : 'against');
-        vote(proposal.id, support);
+        vote(proposal.id, support ? 1 : 0);
     };
 
     return (

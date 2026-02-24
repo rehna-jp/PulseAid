@@ -336,7 +336,7 @@ export function useIsRefundEnabled(campaignId: bigint | undefined) {
 export function useClaimRefund() {
     const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-    const claim = (campaignId: bigint) => {
+    const claimRefund = (campaignId: bigint) => {
         writeContract({
             address: CONTRACT_ADDRESSES.EscrowManager,
             abi: ABIS.EscrowManager as unknown[],
@@ -347,7 +347,7 @@ export function useClaimRefund() {
     };
 
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
-    return { claim, isPending, isConfirming, isSuccess, error, hash };
+    return { claimRefund, isPending, isConfirming, isSuccess, error, hash };
 }
 
 // ─── User Registry ────────────────────────────────────────────────────────────
@@ -491,7 +491,7 @@ export function useSubmitProof() {
 export function useFinalizeProof() {
     const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-    const finalize = (campaignId: bigint) => {
+    const finalizeProof = (campaignId: bigint) => {
         writeContract({
             address: CONTRACT_ADDRESSES.ProofValidator,
             abi: ABIS.ProofValidator as unknown[],
@@ -502,7 +502,7 @@ export function useFinalizeProof() {
     };
 
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
-    return { finalize, isPending, isConfirming, isSuccess, error, hash };
+    return { finalizeProof, isPending, isConfirming, isSuccess, error, hash };
 }
 
 /** Challenge a recently submitted proof (requires 1000 PAT balance). */
@@ -562,7 +562,7 @@ export function useClaimVotingReward() {
 // ─── Governance DAO ───────────────────────────────────────────────────────────
 
 /** Total proposals ever created. */
-export function useProposalCounter() {
+export function useProposalCount() {
     return useContractRead({ contractName: 'GovernanceDAO', functionName: 'proposalCounter' });
 }
 
