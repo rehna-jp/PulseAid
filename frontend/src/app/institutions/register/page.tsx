@@ -24,17 +24,21 @@ export default function RegisterInstitutionPage() {
     const [form, setForm] = useState({
         name: '',
         description: '',
+        category: 'Non-Profit',
+        country: 'Nigeria',
         website: '',
-        stake: '0.01',
+        stake: '0.05',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        register(form.name, form.description, form.website, form.stake);
+        // Hook expects: name, category, country, website, zkProof, stakeAmount
+        // Passing dummy zkProof for now
+        register(form.name, form.category, form.country, form.website, {}, form.stake);
     };
 
     const update = (field: keyof typeof form) => (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
     return (
@@ -137,31 +141,32 @@ export default function RegisterInstitutionPage() {
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <div className="glass-card" style={{ padding: '32px' }}>
-                            {/* Name */}
                             <div style={{ marginBottom: '20px' }}>
-                                <label
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        fontSize: '13px',
-                                        fontWeight: 600,
-                                        color: 'var(--text-secondary)',
-                                        marginBottom: '8px',
-                                        letterSpacing: '0.04em',
-                                        textTransform: 'uppercase',
-                                    }}
-                                >
-                                    <Building2 size={14} />
-                                    Institution Name *
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                                    <Building2 size={14} /> Institution Name *
                                 </label>
-                                <input
-                                    className="input-field"
-                                    required
-                                    value={form.name}
-                                    onChange={update('name')}
-                                    placeholder="e.g. WaterAid Nigeria"
-                                />
+                                <input className="input-field" required value={form.name} onChange={update('name')} placeholder="e.g. WaterAid Nigeria" />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                                <div>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                                        <Building2 size={14} /> Category *
+                                    </label>
+                                    <select className="input-field" value={form.category} onChange={update('category')}>
+                                        <option value="Non-Profit">Non-Profit</option>
+                                        <option value="Government">Government</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="International Org">International Org</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                                        <Globe size={14} /> Country *
+                                    </label>
+                                    <input className="input-field" required value={form.country} onChange={update('country')} placeholder="e.g. Nigeria" />
+                                </div>
                             </div>
 
                             {/* Description */}
@@ -265,7 +270,7 @@ export default function RegisterInstitutionPage() {
                                     className="input-field"
                                     required
                                     type="number"
-                                    min="0.01"
+                                    min="0.05"
                                     step="0.001"
                                     value={form.stake}
                                     onChange={update('stake')}

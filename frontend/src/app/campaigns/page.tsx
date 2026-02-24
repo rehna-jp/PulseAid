@@ -10,7 +10,7 @@ import { useCampaignCounter, useCampaignInfo, useActiveCampaigns } from '@/hooks
 
 // Category colours — assigned by cycling through this palette
 const CATEGORY_COLORS = [
-    '#3b82f6', '#f59e0b', '#8b5cf6', '#10b981', '#ef4444', '#06b6d4',
+    '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899',
 ];
 
 // Normalise the raw tuple returned by getCampaign() into a friendly shape

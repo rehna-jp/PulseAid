@@ -25,6 +25,7 @@ export default function CreateCampaignPage() {
     const [form, setForm] = useState({
         title: '',
         description: '',
+        category: 'Health',
         goal: '',
         days: '30',
         proofRequirements: '',
@@ -36,7 +37,16 @@ export default function CreateCampaignPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        create(form.title, form.description, form.goal, parseInt(form.days), form.proofRequirements);
+        // Hook expects: title, description, category, ipfsMetadata, goalEth, durationSeconds
+        const durationSeconds = parseInt(form.days) * 86400;
+        create(
+            form.title,
+            form.description,
+            form.category,
+            form.proofRequirements,
+            form.goal,
+            durationSeconds
+        );
     };
 
     const Field = ({
@@ -156,6 +166,17 @@ export default function CreateCampaignPage() {
                                     placeholder="Describe your campaign's goals, beneficiaries, and expected impact..."
                                     style={{ resize: 'vertical', fontFamily: 'Inter, sans-serif' }}
                                 />
+                            </Field>
+
+                            <Field icon={FileText} label="Category *">
+                                <select className="input-field" value={form.category} onChange={update('category')}>
+                                    <option value="Health">Health</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Environment">Environment</option>
+                                    <option value="Humanitarian">Humanitarian</option>
+                                    <option value="Crisis Relief">Crisis Relief</option>
+                                    <option value="Animals">Animals</option>
+                                </select>
                             </Field>
 
                             <Field icon={Target} label="Fundraising Goal (ETH) *">

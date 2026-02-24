@@ -31,12 +31,13 @@ import {
 } from 'lucide-react';
 
 const CATEGORY_COLORS: Record<string, string> = {
-    'Emergency': '#ef4444',
     'Health': '#8b5cf6',
     'Education': '#3b82f6',
     'Environment': '#10b981',
-    'Water & Sanitation': '#06b6d4',
-    'General': '#f59e0b',
+    'Humanitarian': '#f59e0b',
+    'Crisis Relief': '#ef4444',
+    'Animals': '#ec4899',
+    'General': '#64748b',
 };
 
 export default function CampaignDetailPage() {
@@ -93,7 +94,11 @@ export default function CampaignDetailPage() {
     const campaignColor = CATEGORY_COLORS[category] || CATEGORY_COLORS['General'];
 
     // ── Proof Handling ──
-    const [proofIpfs, receiptsHash, photosHash, metricsHash, submittedAt, challengeEnd, proofStatus] = proofRaw ? (proofRaw as [string, string, string, string, bigint, bigint, number]) : ['', '', '', '', 0n, 0n, 0];
+    // getProof returns: institution, ipfsHash, receiptsHash, photosHash, status, autoPassed, submittedAt, challengeEnd
+    const [proofInstitution, proofIpfs, receiptsHash, photosHash, proofStatus, autoPassed, submittedAt, challengeEnd] =
+        proofRaw ? (proofRaw as [string, string, string, string, number, boolean, bigint, bigint])
+            : ['', '', '', '', 0, false, 0n, 0n];
+
     const hasProof = submittedAt > 0n;
     const isChallengeActive = hasProof && Number(challengeEnd) * 1000 > Date.now();
     const canFinalize = hasProof && !isChallengeActive && proofStatus === 2; // AutoValidated and window passed
