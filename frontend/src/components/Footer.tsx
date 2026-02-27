@@ -24,70 +24,27 @@ const footerLinks = {
 
 export default function Footer() {
     return (
-        <footer
-            style={{
-                borderTop: '1px solid var(--border)',
-                background: 'var(--bg-secondary)',
-                padding: '60px 24px 32px',
-                marginTop: 'auto',
-            }}
-        >
-            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <footer className="border-t border-[var(--border)] bg-[var(--bg-secondary)] px-6 py-14 mt-auto">
+            <div className="max-w-[1200px] mx-auto">
                 {/* Top row */}
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '2fr repeat(3, 1fr)',
-                        gap: '40px',
-                        marginBottom: '48px',
-                    }}
-                >
-                    {/* Brand */}
-                    <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+                    {/* Brand Section */}
+                    <div className="lg:col-span-2">
                         <Link
                             href="/"
-                            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}
+                            className="no-underline inline-flex items-center gap-2.5 mb-4"
                         >
-                            {/* <div
-                                style={{
-                                    width: 34,
-                                    height: 34,
-                                    borderRadius: '9px',
-                                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    boxShadow: '0 0 15px rgba(16,185,129,0.3)',
-                                }}
-                            >
-                                <Activity size={16} color="white" strokeWidth={2.5} />
-                            </div> */}
                             <span
-                                style={{
-                                    fontFamily: "'Space Grotesk', sans-serif",
-                                    fontWeight: 700,
-                                    fontSize: '18px',
-                                    background: 'linear-gradient(135deg, #10b981, #3b82f6)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                }}
+                                className="font-['Space_Grotesk'] font-bold text-lg bg-gradient-to-br from-[#10b981] to-[#3b82f6] bg-clip-text text-transparent"
                             >
                                 PulseAid
                             </span>
                         </Link>
-                        <p
-                            style={{
-                                color: 'var(--text-muted)',
-                                fontSize: '13px',
-                                lineHeight: 1.7,
-                                maxWidth: '260px',
-                                marginBottom: '20px',
-                            }}
-                        >
+                        <p className="text-[var(--text-muted)] text-[13px] leading-[1.7] max-w-[260px] mb-5">
                             Transparent charitable giving powered by zero-knowledge proofs and smart contracts on Arbitrum.
                         </p>
                         {/* Social icons */}
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div className="flex gap-2.5">
                             {[
                                 { Icon: Github, href: 'https://github.com', label: 'GitHub' },
                                 { Icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
@@ -99,29 +56,7 @@ export default function Footer() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={label}
-                                    style={{
-                                        width: 36,
-                                        height: 36,
-                                        borderRadius: '8px',
-                                        background: 'var(--bg-card)',
-                                        border: '1px solid var(--border)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        color: 'var(--text-muted)',
-                                        textDecoration: 'none',
-                                        transition: 'all 0.2s',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        const el = e.currentTarget;
-                                        el.style.borderColor = '#10b981';
-                                        el.style.color = '#10b981';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        const el = e.currentTarget;
-                                        el.style.borderColor = 'var(--border)';
-                                        el.style.color = 'var(--text-muted)';
-                                    }}
+                                    className="w-9 h-9 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] no-underline transition-all duration-200 hover:border-[#10b981] hover:text-[#10b981]"
                                 >
                                     <Icon size={15} />
                                 </a>
@@ -132,19 +67,10 @@ export default function Footer() {
                     {/* Link columns */}
                     {Object.entries(footerLinks).map(([section, links]) => (
                         <div key={section}>
-                            <h4
-                                style={{
-                                    fontSize: '11px',
-                                    fontWeight: 700,
-                                    letterSpacing: '0.08em',
-                                    textTransform: 'uppercase',
-                                    color: 'var(--text-muted)',
-                                    marginBottom: '16px',
-                                }}
-                            >
+                            <h4 className="text-[11px] font-bold tracking-[0.08em] uppercase text-[var(--text-muted)] mb-4">
                                 {section}
                             </h4>
-                            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <ul className="list-none flex flex-col gap-2.5 p-0 m-0">
                                 {links.map((link) => (
                                     <li key={link.label}>
                                         {link.external ? (
@@ -152,28 +78,14 @@ export default function Footer() {
                                                 href={link.href}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                style={{
-                                                    color: 'var(--text-secondary)',
-                                                    textDecoration: 'none',
-                                                    fontSize: '13px',
-                                                    transition: 'color 0.2s',
-                                                }}
-                                                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#10b981')}
-                                                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--text-secondary)')}
+                                                className="text-[var(--text-secondary)] no-underline text-[13px] transition-colors duration-200 hover:text-[#10b981]"
                                             >
                                                 {link.label}
                                             </a>
                                         ) : (
                                             <Link
                                                 href={link.href}
-                                                style={{
-                                                    color: 'var(--text-secondary)',
-                                                    textDecoration: 'none',
-                                                    fontSize: '13px',
-                                                    transition: 'color 0.2s',
-                                                }}
-                                                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#10b981')}
-                                                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--text-secondary)')}
+                                                className="text-[var(--text-secondary)] no-underline text-[13px] transition-colors duration-200 hover:text-[#10b981]"
                                             >
                                                 {link.label}
                                             </Link>
@@ -186,35 +98,23 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom row */}
-                <div
-                    style={{
-                        borderTop: '1px solid var(--border)',
-                        paddingTop: '24px',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: '12px',
-                    }}
-                >
-                    <p style={{ color: 'var(--text-muted)', fontSize: '12px' }}>
+                <div className="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row justify-between items-center flex-wrap gap-3">
+                    <p className="text-[var(--text-muted)] text-[12px]">
                         © 2026 PulseAid. All rights reserved.
                     </p>
-                    <div style={{ display: 'flex', gap: '20px' }}>
+                    <div className="flex gap-5">
                         {['Privacy Policy', 'Terms of Use', 'Contact'].map((item) => (
                             <a
                                 key={item}
                                 href="#"
-                                style={{ color: 'var(--text-muted)', fontSize: '12px', textDecoration: 'none', transition: 'color 0.2s' }}
-                                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--text-secondary)')}
-                                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--text-muted)')}
+                                className="text-[var(--text-muted)] text-[12px] no-underline transition-colors duration-200 hover:text-[var(--text-secondary)]"
                             >
                                 {item}
                             </a>
                         ))}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)' }}>
-                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 6px #10b981' }} />
+                    <div className="flex items-center gap-1.5 text-[12px] text-[var(--text-muted)]">
+                        <span className="w-2 h-2 rounded-full bg-[#10b981] inline-block shadow-[0_0_6px_#10b981]" />
                         Deployed on Arbitrum Sepolia
                     </div>
                 </div>

@@ -378,7 +378,7 @@ export default function HomePage() {
               textAlign: 'center',
             }}
           >
-            <Heart size={40} color="#10b981" style={{ marginBottom: '20px' }} />
+            <Heart size={40} color="#10b981" style={{ margin: '0 auto 20px', display: 'block' }} />
             <h2
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
